@@ -36,10 +36,13 @@
     }
     </style>
 
-    <script src="//code.jquery.com/jquery-2.1.0.js"></script>
+
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" />
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
+
     <script src="/socket.io/socket.io.js"></script>
 </head>
-<body>
+<body ng-app="Pictionary" ng-controller="ControllerPictionary">
     
     <h1>Pictionary</h1>
     <div>
@@ -52,5 +55,6 @@
     </div>
     <canvas id="canvas"></canvas>
     
-    <script src="main.js"></script>
+    
 </body>
+<script src="main.js"></script>
