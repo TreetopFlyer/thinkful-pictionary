@@ -12,6 +12,9 @@ io.on('connection', function(inSocket){
     inSocket.on('draw', function(inPosition){
         inSocket.broadcast.emit('draw', inPosition);
     });
+    inSocket.on('guess', function(inGuess){
+        inSocket.broadcast.emit('guess', inGuess);
+    });
 });
 
 server.listen(80);

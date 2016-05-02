@@ -35,7 +35,24 @@ var drawing = function(inSocket, inJQCanvas) {
     handlerUp(null);
 };
 
-var guessing = function(inSocket, inJQInput){
+var guessing = function(inSocket, inJQGuess){
+    
+    var JQForm = inJQGuess.find("form");
+    var JQInput = inJQGuess.find("input");
+    var JQUL = inJQGuess.find("ul");
+    
+    function showGuess(inGuess){
+        JQUL.append($("<li>"+inGuess+"</li>"));
+    }
+    
+    JQForm.on('submit', function(inEvent){
+        inEvent.preventDefault();
+        var guess = JQInput.val();
+        inSocket.emit('guess', guess);
+        showGuess(guess);
+    });
+    
+    inSocket.on('guess', showGuess);
     
 };
 
