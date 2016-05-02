@@ -39,7 +39,7 @@
 
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" />
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
-
+    <script src="//code.jquery.com/jquery-2.1.0.js"></script>
     <script src="/socket.io/socket.io.js"></script>
 </head>
 <body ng-app="Pictionary" ng-controller="ControllerPictionary">
@@ -53,8 +53,6 @@
             </form>
         </div>
     </div>
-    <canvas id="canvas"></canvas>
-    
-    
+    <canvas id="canvas" ng-drawing ng-interactive="interactiveCanvas"></canvas>
 </body>
 <script src="main.js"></script>

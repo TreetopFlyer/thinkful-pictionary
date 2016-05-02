@@ -55,25 +55,22 @@ var Pictionary = angular.module("Pictionary", []);
 Pictionary.factory("FactorySocket", [function(){
     return io();
 }]);
-Pictionary.directive("canvas", ["FactorySocket", function(inSocket){
+Pictionary.directive("ngDrawing", ["FactorySocket", function(inSocket){
     return {
-        restrict:'E',
+        restrict:'A',
         link: function(inScope, inElement, inAttributes){
             
-            console.log('linkeing');
+            console.log("matched")
             
             var canvas, context;
             var handlerDown, handlerMove, handlerUp;
+            var interactivityEnable, interactivityDisable;
             var draw;
-            
-            canvas = inElement;
-            
-            console.log(canvas[0].getBoundingClientRect());
-            
-            context = canvas[0].getContext('2d');
-            canvas[0].width = 800;
-            canvas[0].height = 600;
-            canvas.css({width:"800px", height:"600px"});
+
+            canvas = $(inElement[0]);
+            context = canvas.get(0).getContext('2d');
+            canvas[0].width = canvas[0].offsetWidth;
+            canvas[0].height = canvas[0].offsetHeight;
             
             draw = function(position) {
                 context.beginPath();
@@ -84,28 +81,49 @@ Pictionary.directive("canvas", ["FactorySocket", function(inSocket){
 
             handlerDown = function(inEvent){
                 canvas.unbind('mousedown', handlerDown);
-                angular.element(document).bind('mouseup', handlerUp);
+                $(document).bind('mouseup', handlerUp);
                 canvas.bind('mousemove', handlerMove);
             };
             handlerMove = function(inEvent){
 
-                var offset = canvas[0].getBoundingClientRect();
+                var offset = canvas.offset();
                 var pos = {x:inEvent.pageX - offset.left, y:inEvent.pageY - offset.top};
-
-                console.log(pos)
 
                 draw(pos);
                 inSocket.emit('draw', pos);
             };
             handlerUp = function(inEvent){
-                angular.element(document).unbind('mouseup', handlerUp);
+                $(document).unbind('mouseup', handlerUp);
                 canvas.unbind('mousemove', handlerMove);
                 canvas.bind('mousedown', handlerDown);
             };
-            handlerUp(null);
+            
+            
+            interactivityDisable = function(){
+                $(document).unbind('mouseup', handlerUp);
+                canvas.unbind('mousemove', handlerMove);
+                canvas.unbind('mousedown', handlerDown);
+            };
+            interactivityEnable = function(){
+                interactivityDisable();
+                canvas.bind('mousedown', handlerDown);
+            };
+            
+            inScope.$watch(function(inScope){
+                console.log(inAttributes);
+                return inScope[inAttributes.ngInteractive];
+            }, function(inNew, inOld){
+                if(inNew){
+                    interactivityEnable();
+                }else{
+                    interactivityDisable();
+                }
+            });
         }  
     };
 }]);
 Pictionary.controller("ControllerPictionary", ["$scope", function(inScope){
-    console.log("at scope");
+
+    inScope.interactiveCanvas = true;
+    
 }]);
